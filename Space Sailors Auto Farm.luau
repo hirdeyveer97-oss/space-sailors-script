@@ -55,7 +55,7 @@ if plr.Character then
 end
 plr.CharacterAdded:Connect(SetupCharacter)
 
--- === RUN WORKER SCRIPT TASK (WITH AUTO-LOAD & FAST-FORWARD) ===
+-- === RUN WORKER SCRIPT TASK (WITH AUTO-LOAD) ===
 local runningTask = nil
 
 local function InitWorker()
@@ -66,31 +66,7 @@ local function InitWorker()
     
     if MainData.AutoFarm then
         runningTask = task.spawn(function()
-            -- Load your custom GitHub script
-            task.spawn(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/hirdeyveer97-oss/space-sailors-script/refs/heads/main/space%20sailors%20script"))()
-            end)
-            
-            -- Fast-forward trigger for Place ID 5534753074
-            if game.PlaceId == 5534753074 then
-                local playerGui = plr:WaitForChild("PlayerGui")
-                while MainData.AutoFarm do
-                    pcall(function()
-                        local fastForwardBtn = playerGui:FindFirstChild("FastForwardButton", true) 
-                            or playerGui:FindFirstChild("FastForward", true)
-                        
-                        if fastForwardBtn and fastForwardBtn:IsA("GuiButton") then
-                            for _, connection in pairs(getconnections(fastForwardBtn.MouseButton1Click)) do
-                                connection:Fire()
-                            end
-                            for _, connection in pairs(getconnections(fastForwardBtn.Activated)) do
-                                connection:Fire()
-                            end
-                        end
-                    end)
-                    task.wait(2)
-                end
-            end
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/UnknownMoons/SpaceSailors-Auto-Farm/refs/heads/main/AutoFarm-v1.0.0.lua"))()
         end)
     end
 end
