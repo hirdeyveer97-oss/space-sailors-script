@@ -36,6 +36,15 @@ local success, errorMessage = pcall(function()
        end,
     })
 
+    TpTab:CreateButton({
+       Name = "Teleport to DST(mars)",
+       Callback = function()
+          local TeleportService = game:GetService("TeleportService")
+          Rayfield:Notify({Title = "Teleporting", Content = "Connecting to DST(mars) server...", Duration = 3})
+          TeleportService:Teleport(6458953928, game:GetService("Players").LocalPlayer)
+       end,
+    })
+
     -- ==========================================
     --                 MOON TAB
     -- ==========================================
@@ -179,6 +188,15 @@ local success, errorMessage = pcall(function()
     })
 
     MarsTab:CreateSection("Teleports")
+
+    MarsTab:CreateButton({
+       Name = "Teleport to DST(mars)",
+       Callback = function()
+          local TeleportService = game:GetService("TeleportService")
+          Rayfield:Notify({Title = "Teleporting", Content = "Connecting to DST(mars) server...", Duration = 3})
+          TeleportService:Teleport(6458953928, game:GetService("Players").LocalPlayer)
+       end,
+    })
 
     MarsTab:CreateButton({
        Name = "TP to My Lander",
