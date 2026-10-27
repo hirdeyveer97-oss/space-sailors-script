@@ -178,6 +178,64 @@ local success, errorMessage = pcall(function()
        end,
     })
 
+    MarsTab:CreateSection("Teleports")
+
+    MarsTab:CreateButton({
+       Name = "TP to My Lander",
+       Callback = function()
+          local player = game:GetService("Players").LocalPlayer
+          local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+          
+          if hrp then
+             local foundLander = nil
+             for _, obj in pairs(workspace:GetDescendants()) do
+                if obj:IsA("Model") and obj.Name == "MarsLander" then
+                   local ownerVal = obj:FindFirstChild("CurrentPlayer") or obj:FindFirstChild("LanderOwner")
+                   if ownerVal and ownerVal.Value and tostring(ownerVal.Value) == player.Name then
+                      foundLander = obj
+                      break
+                   end
+                end
+             end
+             
+             if foundLander then
+                local midUpper = foundLander:FindFirstChild("MidUpperStage")
+                local targetPart = (midUpper and midUpper:FindFirstChildWhichIsA("BasePart", true)) or foundLander:FindFirstChildWhichIsA("BasePart", true)
+                
+                if targetPart then
+                   hrp.Anchored = true
+                   hrp.CFrame = targetPart.CFrame + Vector3.new(0, 10, 0)
+                   Rayfield:Notify({Title = "Loading Terrain...", Content = "Anchoring for 1.5s to let map load.", Duration = 2})
+                   task.wait(1.5)
+                   hrp.Anchored = false
+                   Rayfield:Notify({Title = "Teleported", Content = "Moved to Mars Lander.", Duration = 2})
+                else
+                   Rayfield:Notify({Title = "Error", Content = "MarsLander has no physical parts.", Duration = 3})
+                end
+             else
+                Rayfield:Notify({Title = "Not Found", Content = "Could not find a MarsLander owned by you.", Duration = 3})
+             end
+          end
+       end,
+    })
+
+    MarsTab:CreateButton({
+       Name = "TP to Gem Pyramid",
+       Callback = function()
+          local player = game:GetService("Players").LocalPlayer
+          local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+          
+          if hrp then
+             hrp.Anchored = true
+             hrp.CFrame = CFrame.new(-54282.675, 1124.963, 9580.470)
+             Rayfield:Notify({Title = "Loading Terrain...", Content = "Anchoring for 1.5s to let map load.", Duration = 2})
+             task.wait(1.5)
+             hrp.Anchored = false
+             Rayfield:Notify({Title = "Teleported", Content = "Arrived at Gem Pyramid.", Duration = 2})
+          end
+       end,
+    })
+
     MarsTab:CreateSection("Other")
 
     MarsTab:CreateButton({
