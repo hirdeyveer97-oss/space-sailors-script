@@ -55,18 +55,50 @@ if plr.Character then
 end
 plr.CharacterAdded:Connect(SetupCharacter)
 
--- === RUN WORKER SCRIPT TASK (WITH AUTO-LOAD) ===
+-- === WORKER & FAST-FORWARD TASKS ===
 local runningTask = nil
+local ffTask = nil
 
 local function InitWorker()
     if runningTask then
         task.cancel(runningTask)
         runningTask = nil
     end
+    if ffTask then
+        task.cancel(ffTask)
+        ffTask = nil
+    end
     
     if MainData.AutoFarm then
+        -- Spawn Auto Farm Worker
         runningTask = task.spawn(function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/UnknownMoons/SpaceSailors-Auto-Farm/refs/heads/main/AutoFarm-v1.0.0.lua"))()
+        end)
+        
+        -- Spawn Fast-Forward Scanner
+        ffTask = task.spawn(function()
+            local PlayerGui = plr:WaitForChild("PlayerGui")
+            while task.wait(0.5) do
+                for _, obj in pairs(PlayerGui:GetDescendants()) do
+                    if obj:IsA("TextButton") and obj.Visible then
+                        local textMatch = string.find(string.lower(obj.Text), "fast")
+                        local nameMatch = string.find(string.lower(obj.Name), "fast")
+                        
+                        if textMatch or nameMatch then
+                            pcall(function()
+                                if getconnections then
+                                    for _, conn in pairs(getconnections(obj.MouseButton1Click)) do conn:Fire() end
+                                    for _, conn in pairs(getconnections(obj.Activated)) do conn:Fire() end
+                                elseif firesignal then
+                                    firesignal(obj.MouseButton1Click)
+                                    firesignal(obj.Activated)
+                                end
+                            end)
+                            task.wait(3)
+                        end
+                    end
+                end
+            end
         end)
     end
 end
